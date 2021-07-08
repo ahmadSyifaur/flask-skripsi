@@ -1,0 +1,94 @@
+{% include"user-header.html" %} 
+<!-- Content Wrapper. Contains page content -->
+  <div class="container">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Rekomendasi Pasangan Kombinasi Font Untuk website</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <!-- <li class="breadcrumb-item"><a href="#">Font</a></li> -->
+              <!-- <li class="breadcrumb-item active">Dashboard v1</li> -->
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+            <form action="" method="post">
+                <div class="mb-3 col-md-6">
+                    <label for="query" class="form-label">Masukkan Font yang anda inginkan : </label>
+                    <input type="text" class="form-control" id="user-font-query" name="user-font-query" placeholder="ex Arial, Lato, Times New Roman">
+                </div>
+                <input type="submit" class="btn btn-primary" name="submit_btn" id="submit_btn" value="Submit">
+                <!-- <input type="submit" name="submit_button" value="Do Something"> -->
+            </form>
+        <div>
+        <hr>
+        <div class="row">
+          <div class="col col-md-12">
+            <div class="card">
+              <!-- <div class="card-header">
+                <h3 class="card-title">Bordered Table</h3>
+              </div> -->
+              <!-- /.card-header -->
+              <div class="card-body">
+                  <b style="font-size: 24px;">Daftar Rekomendasi</b>
+                  <hr>
+                <hr>
+                <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                  <table id="example2" class="table table-bordered table-striped dataTable dtr-inline" role="grid" aria-describedby="example1_info">
+                    <thead>
+                    <tr role="row">
+                      <!-- <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending">Browser</th> -->
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending">Website Source</th>
+                      <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending">Combination Font</th>
+                      <th id="cosimvalue" class="sorting sorting_acs" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Cosine Similarity Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      {% for rs in data %}
+                        <tr>
+                          <!-- <td>{{loop.index}}</td> -->
+                          <td>{{rs.1}}</td>
+                          <td>{{rs.2}}</td>
+                          <td class="dtr-control sorting_1" tabindex="0">{{cosimval[loop.index-1]}}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                      <th rowspan="1" colspan="1">Website Source</th>
+                      <th rowspan="1" colspan="1">Combination Font</th>
+                      <th rowspan="1" colspan="1">Cosine Similarity Value</th>
+                      <!-- <th rowspan="1" colspan="1">Platform(s)</th>
+                      <th rowspan="1" colspan="1">Engine version</th>
+                      <th rowspan="1" colspan="1">CSS grade</th></tr> -->
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+{% include"admin/footer.html" %}

@@ -1,0 +1,102 @@
+{% include"admin/header.html" %} 
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Font from website</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Font</a></li>
+              <!-- <li class="breadcrumb-item active">Dashboard v1</li> -->
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <form action="" method="post">
+          <div class="mb-3 col-md-6">
+            <label for="web-source" class="form-label">Get Font from :</label>
+            <input type="text" class="form-control" id="web-source" name="web-source" placeholder="ex htpps://www.google.com">
+          </div>
+          <button type="submit" class="btn btn-primary">Get Font</button>
+        </form>
+        <div>
+          <form action="{{url_for('insertWebFont')}}" method="post">
+            <div class="mb-3">
+              <label for="webURL" class="form-label">Website Source :</label>
+              <input type="text" class="form-control" id="webURL" name="webURL" value="{% if webUrl != '' %} {{webUrl}} {% endif %}" required="1">
+            </div>
+            <div class="mb-3">
+              <label for="fontWebResult" class="form-label">Font Combination Result :</label>
+              <textarea type="text" class="form-control" id="fontWebResult" name="fontWebResult" required="1" >{% if fontFromWebsite != '' %} {{fontFromWebsite}} {% endif %}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save to DB</button>
+          </form>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+              {{message}}
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        </div>
+        
+        <hr>
+        <div class="row">
+          <div class="col col-md-12">
+            <div class="card">
+              <!-- <div class="card-header">
+                <h3 class="card-title">Bordered Table</h3>
+              </div> -->
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>                  
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>Website Link</th>
+                      <th>Combination Font</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for rs in data %}
+                    <tr>
+                      <td>{{loop.index}}</td>
+                      <td>{{rs.1}}</td>
+                      <td>{{rs.2}}</td>
+                      <td><a href="/deleteWebFont/{{rs.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a></td>
+                      <td></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% include"admin/footer.html" %}
