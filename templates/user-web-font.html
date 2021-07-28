@@ -41,9 +41,10 @@
               </div> -->
               <!-- /.card-header -->
               <div class="card-body">
-                  <b style="font-size: 24px;">Daftar Rekomendasi</b>
+                  <p style="font-size: 24px;"><b>Daftar Rekomendasi</b> unruk "{{query}}"</p>
                   <hr>
                 <hr>
+                {% if isZero != 'true' %}
                 <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
                   <table id="example2" class="table table-bordered table-striped dataTable dtr-inline" role="grid" aria-describedby="example1_info">
                     <thead>
@@ -56,12 +57,22 @@
                     </thead>
                     <tbody>
                       {% for rs in data %}
+                        {% if cosimval[loop.index-1] != 0.0 %}
                         <tr>
                           <!-- <td>{{loop.index}}</td> -->
-                          <td>{{rs.1}}</td>
+                          <td><a href="{{rs.1}}">{{rs.1}}</a></td>
                           <td>{{rs.2}}</td>
                           <td class="dtr-control sorting_1" tabindex="0">{{cosimval[loop.index-1]}}</td>
+                          <!-- <td>{% if cosimval[loop.index-1] != 0.0 %} <a href="{{rs.1}}">{{rs.1}}</a> {%endif%}</td>
+                          <td>{% if cosimval[loop.index-1] != 0.0 %} {{rs.2}} {%endif%}</td>
+                          <td class="dtr-control sorting_1" tabindex="0">{% if cosimval[loop.index-1] != 0.0 %} {{cosimval[loop.index-1]}} {%endif%}</td> -->
+                          <!-- {% if cosimval[loop.index-1] != 0.0 %}
+                            <td><a href="{{rs.1}}">{{rs.1}}</a></td>
+                            <td>{{rs.2}}</td>
+                            <td class="dtr-control sorting_1" tabindex="0">{{cosimval[loop.index-1]}}</td>
+                          {%endif%} -->
                         </tr>
+                        {%endif%}
                       {% endfor %}
                     </tbody>
                     <tfoot>
@@ -75,6 +86,8 @@
                     </tfoot>
                   </table>
                 </div>
+                {% else %} <h3>Font tidak ditemukan, atau silahkan cek query anda! (font1,font2,...)</h3>
+                {% endif %}
               </div>
             </div>
           </div>

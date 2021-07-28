@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Font from website</h1>
+            <h1 class="m-0 text-dark">Font from Combination-Font Posters</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Font</a></li>
+              <li class="breadcrumb-item"><a href="/font-poster-kombinasi">Font/Combination Font Posters</a></li>
               <!-- <li class="breadcrumb-item active">Dashboard v1</li> -->
             </ol>
           </div><!-- /.col -->
@@ -21,6 +21,38 @@
 
     <!-- Main content -->
     <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <form action="" method="post">
+          <div class="mb-3 col-md-6">
+            <label for="web-source" class="form-label">Gambar Poster :</label>
+            <input type="file" class="form-control" id="poster-img" name="poster-img">
+          </div>
+          <!-- <button type="submit" class="btn btn-primary">Browse</button> -->
+        </form>
+        <div>
+          <form action="{{url_for('insertPosterFont')}}" method="post">
+            <div class="mb-3">
+              <label for="posterURL" class="form-label">Sumber Poster :</label>
+              <input type="text" class="form-control" id="posterURL" name="posterURL" required="1">
+            </div>
+            <div class="mb-3">
+              <label for="fontPosterResult" class="form-label">Masukkan Kombinasi Font Yang Ada Dalam Poster:</label>
+              <textarea type="text" class="form-control" id="fontPosterResult" name="fontPosterResult" required="1" ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Simpan Ke Database</button>
+          </form>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+              {{message}}
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        </div>
         <hr>
         <div class="row">
           <div class="col col-md-12">
