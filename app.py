@@ -5,6 +5,10 @@ from flask_bcrypt import Bcrypt
 from cosine import get_tf_idf_query_similarity
 import pandas as pd
 import string
+from werkzeug.utils import secure_filename
+import os
+import urllib.request
+import numpy as np
 
 import os
 
@@ -19,9 +23,22 @@ app.config['MYSQL_DB'] = 'font_db'
  
 mysql = MySQL(app)
 bcrypt = Bcrypt()
+
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+  
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+  
+def allowed_file(filename):
+ return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 # @app.route("/")
 # def hello():
 #     return "Hello, World!"
+@app.route("/")
+def main():
+    return render_template('index.html')
+
 @app.route('/web-font', methods=["POST","GET"])
 def web_font(): 
     if g.username:
@@ -35,6 +52,23 @@ def web_font():
             return render_template('admin/font-website.html', menu='font', jenisfont= 'website', data=font, fontFromWebsite= getFont, webUrl=webURL, uname=session['username'])
         else:
             return render_template('admin/font-website.html', menu='font', jenisfont= 'website', data=font)
+    # return render_template('admin/index.html', dataWebFont=font)
+    else:
+        return render_template('admin/admin-login.html')
+
+@app.route('/poster-font', methods=["POST","GET"])
+def poster_font(): 
+    if g.username:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM posters_font')
+        font = cursor.fetchall()
+        cursor.close()
+        # if request.method == "POST":
+        #     webURL = request.form['web-source']
+        #     getFont = getWebFont(webURL)
+        #     return render_template('admin/font-website.html', menu='font', jenisfont= 'website', data=font, fontFromWebsite= getFont, webUrl=webURL, uname=session['username'])
+        # else:
+        return render_template('admin/font-poster-kombinasi.html', menu='font', jenisfont= 'Poster', data=font)
     # return render_template('admin/index.html', dataWebFont=font)
     else:
         return render_template('admin/admin-login.html')
@@ -66,6 +100,31 @@ def insertWebFont():
     else:
         return render_template("ERROR")
 
+@app.route('/insertPosterFont', methods=["POST","GET"])
+def insertPosterFont(): 
+    posterLink = request.form['posterURL']
+    combinationFont = request.form['fontPosterResult']
+    if request.method == "POST" :
+        file = request.files['poster-img']
+        cursor = mysql.connection.cursor()
+        row= cursor.execute('SELECT poster_link FROM posters_font WHERE poster_link LIKE %s',("%"+posterLink+"%",))
+        font = cursor.fetchone()
+        cursor.close()
+        if row == 0 :
+            if file and allowed_file(file.filename):
+                cursor = mysql.connection.cursor()
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                cursor.execute('INSERT INTO posters_font (poster_name,poster_link,poster_combination_font) VALUES (%s, %s, %s)',(filename,posterLink,combinationFont))
+                mysql.connection.commit()    
+            print(file)
+            return redirect(url_for('poster_font'))
+        else:
+            flash('Sudah Ada')
+            return redirect(url_for('poster_font'))
+    else:
+        return render_template("ERROR")
+
 
 
 @app.before_request
@@ -89,9 +148,6 @@ def countWeb():
     
     return res
 
-@app.route("/")
-def main():
-    return render_template('index.html')
 
 @app.route("/login",methods=['GET','POST'])
 def login():
@@ -130,12 +186,6 @@ def logout():
     session.clear()
     return render_template('admin/admin-login.html')
 
-@app.route("/font-poster")
-def fposter():
-    if g.username:
-        return render_template('admin/font-poster.html', menu='font', jenisfont= 'poster')
-    else:
-        return render_template('admin/admin-login.html')
 
 @app.route("/rekomendasi-font-website",methods=['GET','POST'])
 def userWebFont():
@@ -173,7 +223,14 @@ def userWebFont():
                     results.append(temp)
 
                 cosimVal = get_tf_idf_query_similarity(results,query_join)
-                return render_template('user-web-font.html', menu='font', jenisfont= 'website', data=font, cosimval=cosimVal)
+                
+                isZero = "false"
+                is_all_zero = np.all((cosimVal == 0))
+                if is_all_zero:
+                    isZero="true"
+
+                array_round= np.around(cosimVal, 2)
+                return render_template('user-web-font.html', menu='font', jenisfont= 'website', data=font, cosimval=cosimVal, isZero=isZero, query=query)
             else:
                 return render_template('user-web-font.html', menu='font', jenisfont= 'website')
             # cosimVal = results
@@ -183,12 +240,12 @@ def userWebFont():
         else:
             return render_template('user-web-font.html', menu='font', jenisfont= 'website',)
 
-@app.route("/font-poster-kombinasi")
-def fposterfont():
-    if g.username:
-        return render_template('admin/font-poster-kombinasi.html', menu='font', jenisfont= 'poster_kombinasi')
-    else:
-        return render_template('admin/admin-login.html')
+# @app.route("/font-poster-kombinasi")
+# def fposterfont():
+#     if g.username:
+#         return render_template('admin/font-poster-kombinasi.html', menu='font', jenisfont= 'poster_kombinasi')
+#     else:
+#         return render_template('admin/admin-login.html')
 
 if __name__ == "__main__":
     app.run(debug = True)

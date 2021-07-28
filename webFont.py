@@ -17,8 +17,9 @@ def getWebFont(url):
   try:
     wd.get(url)
     # wd.implicitly_wait(10)
-    all = wd.find_elements_by_xpath("//*[@id]")
-    for ii in all:
+    all_source = wd.find_elements_by_xpath("//span")
+    # alla = wd.find_elements_by_xpath("//span")
+    for ii in all_source:
       # one_class = ii.get_property("font-family")
       # print(ii)
       tmp = ii.value_of_css_property("font-family")

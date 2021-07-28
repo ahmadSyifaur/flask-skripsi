@@ -76,7 +76,7 @@
                     {% for rs in data %}
                     <tr>
                       <td>{{loop.index}}</td>
-                      <td>{{rs.1}}</td>
+                      <td><a href="{{rs.1}}">{{rs.1}}</a></td>
                       <td>{{rs.2}}</td>
                       <td><a href="/deleteWebFont/{{rs.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a></td>
                       <td></td>
